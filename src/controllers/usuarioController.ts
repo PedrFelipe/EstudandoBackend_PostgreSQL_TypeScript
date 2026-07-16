@@ -6,7 +6,7 @@ async function listarUsuarios (req: Request ,res: Response) {
 
     const usuarios = await usuarioService.listarUsuarios();
 
-    res.json(usuarios);
+    res.status(200).json(usuarios);
 }
 
 async function criarUsuarios (req: Request ,res: Response) {
@@ -15,7 +15,7 @@ async function criarUsuarios (req: Request ,res: Response) {
 
     await usuarioService.criarUsuarios(nome);
 
-    res.json({
+    res.status(201).json({
         mensagem: "Usuário criado"
     });
 
@@ -27,7 +27,7 @@ async function deletarUsuario (req: Request ,res: Response) {
 
     await usuarioService.deletarUsuario(id);
 
-    res.json({
+    res.status(200).json({
         mensagem: "Usuário removido"
     });
 }   
@@ -40,7 +40,7 @@ async function editarUsuario (req: Request ,res: Response) {
 
     await usuarioService.editarUsuario(id, nome);
 
-    res.json ({
+    res.status(201).json ({
         mensagem: "Usuário atualizado"
     });
 }
@@ -51,7 +51,15 @@ async function procurarUsuario (req: Request ,res: Response) {
 
     const usuario = await usuarioService.procurarUsuario(id);
 
-    res.json(usuario);
+    if (!usuario) {
+
+        res.status(404).json ({
+            mensagem: "Usuário não encotrado"
+        })
+
+    }
+
+    res.status(200).json(usuario);
 
 }
 
