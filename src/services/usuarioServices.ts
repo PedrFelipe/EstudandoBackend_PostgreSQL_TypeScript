@@ -1,10 +1,20 @@
 const pool = require("../config/database");
 
-async function listarUsuarios() {
+async function listarUsuarios(nome?: string) {
+    if (nome) {
+        const resultado = await pool.query(
+        "SELECT * FROM usuarios WHERE nome = $1 ORDER BY id ASC;",
+        [nome]
+    );
+    return resultado.rows;
+    
+} else {
+    
     const resultado = await pool.query(
         "SELECT * FROM usuarios ORDER BY id ASC;"
     );
     return resultado.rows;
+}
 
 };
 
@@ -23,7 +33,7 @@ async function deletarUsuario(id: number) {
         "DELETE FROM usuarios WHERE id = $1;",
         [id]
     );
-    
+    return resultado.rowCount;
 };
 
 async function editarUsuario (id: number, nome: string) {
@@ -32,7 +42,7 @@ async function editarUsuario (id: number, nome: string) {
             "UPDATE usuarios SET nome = $1 WHERE id = $2;",
             [nome, id]
     );
-
+    return resultado.rowCount;
 };
 
 async function procurarUsuario(id: number) {
