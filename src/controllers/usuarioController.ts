@@ -9,6 +9,7 @@ async function listarUsuarios (req: Request ,res: Response) {
     const usuarios = await usuarioService.listarUsuarios(nome);
 
     res.status(200).json(usuarios);
+    console.log(req.headers.projeto);
 }
 
 async function criarUsuarios (req: Request ,res: Response) {
