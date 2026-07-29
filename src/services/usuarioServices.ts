@@ -18,7 +18,6 @@ async function listarUsuarios(nome?: string) {
 
 };
 
-
 async function criarUsuarios(nome: string) {
     const resultado = await pool.query(
         "INSERT INTO usuarios (nome) VALUES ($1);",
@@ -36,11 +35,15 @@ async function deletarUsuario(id: number) {
     return resultado.rowCount;
 };
 
-async function editarUsuario (id: number, nome: string) {
+async function editarUsuario (
+    id: number,
+    nome: string,
+    email: string,
+    idade: number) {
 
     const resultado = await pool.query(
-            "UPDATE usuarios SET nome = $1 WHERE id = $2;",
-            [nome, id]
+            "UPDATE usuarios SET nome = $1, email = $2, idade = $3 WHERE id = $4;",
+            [nome, email, idade, id]
     );
     return resultado.rowCount;
 };
@@ -55,10 +58,45 @@ return resultado.rows[0] ?? null;
 
 };
 
+async function atualizarUsuario(id: number, dados: any) {
+
+    let sql = "UPDATE usuarios SET "
+    
+    const campos = [];
+    const valores = [];
+ 
+    if (dados.nome){
+        campos.push(`nome = $${valores.length + 1}`);
+        valores.push(dados.nome);
+    }
+
+    if (dados.email) {
+        campos.push(`email = $${valores.length + 1}`);
+        valores.push(dados.email);
+    }
+
+    if (dados.idade) {
+        campos.push(`idade = $${valores.length + 1}`);
+        valores.push(dados.idade);
+    }
+
+    sql += campos.join(", ");
+
+    valores.push(id);
+
+    sql += ` WHERE id = $${valores.length}`;
+
+    const resultado = await pool.query(sql, valores);
+
+    return resultado.rowCount
+
+}
+
 export {
     listarUsuarios,
     criarUsuarios,
     deletarUsuario,
     editarUsuario,
-    procurarUsuario
+    procurarUsuario,
+    atualizarUsuario
 }

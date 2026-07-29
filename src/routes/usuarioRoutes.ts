@@ -15,6 +15,8 @@ router.put("/:id", usuarioController.editarUsuario);
 
 router.delete("/:id", usuarioController.deletarUsuario);
 
+router.patch("/:id", usuarioController.atualizarUsuario);
+
 
 
 module.exports = router;

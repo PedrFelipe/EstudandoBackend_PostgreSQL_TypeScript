@@ -63,6 +63,8 @@ async function editarUsuario (req: Request ,res: Response) {
     const id = Number(req.params.id);
 
     const nome = req.body.nome;
+    const email = req.body.email;
+    const idade = req.body.idade
 
     if (!nome) {
     return res.status(400).json({
@@ -70,7 +72,20 @@ async function editarUsuario (req: Request ,res: Response) {
     });
     } 
 
+    if (!email) {
+    return res.status(400).json({
+        mensagem: "Email inválido"
+    });
+    } 
+
+    if (!idade) {
+    return res.status(400).json({
+        mensagem: "Idade inválida"
+    });
+    } 
+
     const nomeSemEspacos = nome.trim();
+    const emailSemEspacos = email.trim();
 
     if (!nomeSemEspacos) {
         return res.status(400).json({
@@ -78,7 +93,14 @@ async function editarUsuario (req: Request ,res: Response) {
         });
     }
 
-    const atualizado = await usuarioService.editarUsuario(id, nomeSemEspacos);
+       if (!emailSemEspacos) {
+        return res.status(400).json({
+            mensagem: "Email inválido"
+        });
+    }
+
+
+    const atualizado = await usuarioService.editarUsuario(id, nomeSemEspacos, emailSemEspacos, idade);
 
     if (!atualizado) {
         return res.status(404).json({
@@ -107,10 +129,33 @@ async function procurarUsuario (req: Request ,res: Response) {
     
 }
 
+async function atualizarUsuario (req: Request, res: Response) {
+    const id = Number(req.params.id)
+
+    const dados = req.body;
+
+    if (Object.keys(dados).length === 0) {
+        return res.status(400).json({
+            mensagem: "Nenhum campo para atualizar."
+        });
+    }
+
+    const atualizado = await usuarioService.atualizarUsuario(id, dados);
+
+    if (!atualizado) {
+        return res.status(404).json({
+            mensagem: "Usuário não encontrado"
+        })
+    }
+     return res.status(200).json ({
+        mensagem: "Usuário atualizado"
+    });
+}
 export {
     listarUsuarios,
     criarUsuarios,
     deletarUsuario,
     editarUsuario,
-    procurarUsuario
+    procurarUsuario,
+    atualizarUsuario
 }
