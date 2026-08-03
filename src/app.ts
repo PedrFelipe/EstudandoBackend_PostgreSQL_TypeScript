@@ -9,6 +9,7 @@ app.use(express.json());
 
 const usuarioRoutes = require("./routes/usuarioRoutes");
 
+
 app.use("/usuarios", usuarioRoutes);
 
 app.listen(3000, () => {

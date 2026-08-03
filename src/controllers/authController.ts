@@ -1,4 +1,5 @@
 import * as authService from "../services/authServices";
+import jwt from "jsonwebtoken";
 
 import type {Request, Response } from "express";
 
@@ -13,6 +14,7 @@ async function login (req: Request, res: Response) {
         });
     }
 
+    
     const usuario = await authService.login(email, senha);
 
     if (!usuario) {
@@ -21,8 +23,20 @@ async function login (req: Request, res: Response) {
         });
     }
 
+    const token = jwt.sign(
+        { 
+            id: usuario.id,
+            email: usuario.email,
+            role: usuario.role
+        },
+        "segredo-do-projeto",
+        { expiresIn: "1h"}
+    );
+
     return res.status(200).json({
-        mensagem: "Logado"
+        mensagem: "Logado",
+        token: token
     })
 }
+
 export { login };
